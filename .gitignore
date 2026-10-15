@@ -1,0 +1,6 @@
+.claude/
+*.zip
+*.tmp.png
+node_modules/
+.DS_Store
+Thumbs.db

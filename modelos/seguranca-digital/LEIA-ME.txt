@@ -1,0 +1,6 @@
+Segurança Digital — landing page
+
+Abra o arquivo index.html no navegador (duplo clique).
+Tudo está em um único arquivo (HTML, CSS e JavaScript).
+As fontes são carregadas do Google Fonts, então é preciso internet para vê-las;
+sem internet, a página usa fontes do sistema.

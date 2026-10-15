@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visualizar modelo</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230d0d0f%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%276%27 fill=%27%23d9f26b%27/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#0d0d0f; --bar:#141417; --line:#2a2a30; --text:#f2efe8; --muted:#9a978f; --accent:#d9f26b; --accent-ink:#141600; }
+    @view-transition { navigation: auto; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { background: var(--bg); color: var(--text); font-family: "Manrope", system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .bar { height: 60px; flex: none; display: flex; align-items: center; gap: 16px; padding: 0 16px; background: var(--bar); border-bottom: 1px solid var(--line); }
+    .back { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); white-space: nowrap; }
+    .back:hover { color: var(--text); }
+    .title { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+    .title strong { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .title span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+    .devices { display: flex; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+    .devices button { display: grid; place-items: center; width: 38px; height: 32px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); }
+    .devices button:hover { color: var(--text); }
+    .devices button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+
+    .icon-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); }
+    .icon-btn:hover { color: var(--text); border-color: var(--muted); }
+
+    .stage { flex: 1; min-height: 0; display: flex; justify-content: center; align-items: stretch; padding: 0; transition: padding .3s; }
+    .stage.framed { padding: 24px; background: radial-gradient(circle at 50% 0%, #1c1c21, var(--bg) 70%); }
+    .frame-wrap { width: 100%; height: 100%; transition: width .4s cubic-bezier(.2,.8,.2,1); background: #fff; overflow: hidden; }
+    .stage.framed .frame-wrap { border-radius: 28px; border: 10px solid #222228; box-shadow: 0 40px 80px -30px rgba(0,0,0,.8); }
+    iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    .erro { margin: auto; text-align: center; color: var(--muted); padding: 24px; }
+    .erro strong { display: block; font-family: "Instrument Serif", serif; font-weight: 400; font-size: 32px; color: var(--text); margin-bottom: 8px; }
+    .erro a { color: var(--accent); }
+
+    @media (max-width: 760px) {
+      .devices, .title span, .cta-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="catalogo.html">← <span class="cta-text">Catálogo</span></a>
+    <div class="title"><strong id="titulo">Modelo</strong><span id="segmento"></span></div>
+
+    <div class="devices" role="group" aria-label="Tamanho da tela">
+      <button data-w="100%" aria-pressed="true" title="Computador">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </button>
+      <button data-w="820px" aria-pressed="false" title="Tablet">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>
+      </button>
+      <button data-w="400px" aria-pressed="false" title="Celular">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+      </button>
+    </div>
+
+    <a class="icon-btn" id="novaAba" target="_blank" rel="noopener" title="Abrir em nova aba">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+    </a>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="frame-wrap" id="wrap"><iframe id="frame" title="Prévia do modelo"></iframe></div>
+  </main>
+
+  <script src="catalogo.js"></script>
+  <script>
+    (function () {
+      const E = window.ESTUDIO || {};
+      const pasta = new URLSearchParams(location.search).get("m");
+      const m = (window.MODELOS || []).find((x) => x.pasta === pasta);
+
+      if (!m) {
+        document.getElementById("stage").innerHTML =
+          '<div class="erro"><strong>Modelo não encontrado.</strong><a href="catalogo.html">Voltar ao catálogo</a></div>';
+        document.querySelector(".devices").hidden = true;
+        document.getElementById("novaAba").hidden = true;
+        return;
+      }
+
+      const src = `modelos/${m.pasta}/index.html`;
+      document.title = `${m.titulo} — ${E.nome || "Catálogo"}`;
+      document.getElementById("titulo").textContent = m.titulo;
+      document.getElementById("segmento").textContent = m.segmento || "";
+      document.getElementById("frame").src = src;
+      document.getElementById("novaAba").href = src;
+
+      const stage = document.getElementById("stage");
+      const wrap = document.getElementById("wrap");
+      const btns = document.querySelectorAll(".devices button");
+      btns.forEach((b) =>
+        b.addEventListener("click", () => {
+          btns.forEach((x) => x.setAttribute("aria-pressed", x === b));
+          wrap.style.width = b.dataset.w;
+          stage.classList.toggle("framed", b.dataset.w !== "100%");
+        })
+      );
+    })();
+  </script>
+</body>
+</html>

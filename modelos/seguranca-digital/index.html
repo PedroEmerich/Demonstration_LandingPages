@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Segurança Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the flyer's tri-fold rhythm, unfolded vertically — navy gradient panels alternate with white graph-paper panels; hexagon networks and a wireframe globe carry the "data" motif. Single deliberate look, both host themes. */
+:root{
+  --navy-950:#050c33;
+  --navy-800:#0f1a5c;
+  --blue-600:#2b44b8;
+  --blue-500:#3d5bd6;
+  --cyan:#5cc8ec;
+  --paper:#fbfcff;
+  --grid:#e9edf7;
+  --ink:#0a0e1f;
+  --ink-soft:#4a5372;
+  --on-navy:#ffffff;
+  --on-navy-soft:#b9c4ef;
+  --ok:#2bb673; --warn:#f2a93b; --bad:#e5484d;
+  --f-display:"Montserrat", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --gutter:max(16px, 5vw);
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--navy-950);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.05}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gutter)}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase}
+
+/* panels */
+.navy{background:linear-gradient(180deg,var(--navy-950) 0%,var(--navy-800) 55%,var(--blue-600) 100%);color:var(--on-navy)}
+.paper{background-color:var(--paper);color:var(--ink);
+  background-image:linear-gradient(var(--grid) 1.5px,transparent 1.5px),linear-gradient(90deg,var(--grid) 1.5px,transparent 1.5px);
+  background-size:58px 58px;background-position:-1px -1px}
+
+/* progress + nav */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--cyan),var(--blue-500));z-index:60}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background .3s,backdrop-filter .3s}
+.nav.solid{background:rgba(5,12,51,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px;color:var(--on-navy)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;letter-spacing:.12em;font-size:13px;text-transform:uppercase;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:14px}
+.nav ul a{text-decoration:none;color:var(--on-navy-soft);transition:color .2s}
+.nav ul a:hover{color:var(--on-navy)}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding-block:120px 72px}
+.hero canvas.hex{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero-copy{min-width:0;display:flex;flex-direction:column;gap:26px}
+.hero .eyebrow{color:var(--cyan)}
+.hero h1{font-size:clamp(40px,6.4vw,84px);font-weight:900;letter-spacing:.04em;text-transform:uppercase}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line span{display:inline-block;animation:rise .9s cubic-bezier(.2,.7,.1,1) both}
+.hero h1 .line:nth-child(2) span{animation-delay:.08s}
+.hero h1 .line:nth-child(3) span{animation-delay:.16s}
+.hero h1 .accent{background:linear-gradient(90deg,#fff 0%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+.lead{font-size:clamp(18px,1.9vw,22px);color:var(--on-navy-soft);max-width:34ch}
+.lead strong{color:var(--on-navy);font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border:1.5px solid transparent;transition:background .2s,color .2s,border-color .2s;will-change:transform}
+.btn.primary{background:var(--on-navy);color:var(--navy-950)}
+.btn.primary:hover{background:var(--cyan)}
+.btn.ghost{border-color:rgba(255,255,255,.35);color:var(--on-navy)}
+.btn.ghost:hover{border-color:var(--on-navy)}
+.globe-wrap{position:relative;aspect-ratio:1;max-width:100%;width:100%}
+.globe-wrap canvas{width:100%;height:100%;display:block}
+.globe-tag{position:absolute;font-family:var(--f-mono);font-size:12px;color:var(--on-navy-soft);padding:6px 10px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(5,12,51,.55);backdrop-filter:blur(6px)}
+.globe-tag b{color:var(--cyan);font-weight:500}
+.scroll-cue{position:relative;margin-top:48px;display:flex;align-items:center;gap:12px;color:var(--on-navy-soft);font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.scroll-cue i{width:1.5px;height:38px;background:linear-gradient(var(--cyan),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-width:860px){
+  .hero{padding-block:96px 56px}
+  .hero .wrap{grid-template-columns:1fr}
+  .globe-wrap{max-width:360px;margin:0 auto;order:-1}
+}
+
+/* intro */
+.intro{padding-block:120px}
+.intro .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(40px,6vw,88px);align-items:start}
+.intro-head{min-width:0;container-type:inline-size;position:sticky;top:110px}
+.intro h2{font-size:clamp(34px,12cqi,76px);font-weight:900;text-transform:uppercase;letter-spacing:.01em;overflow-wrap:anywhere}
+.intro h2 small{display:block;font-family:var(--f-mono);font-size:13px;font-weight:400;letter-spacing:.14em;color:var(--blue-500);margin-bottom:18px}
+.read{display:flex;flex-direction:column;gap:28px;font-family:var(--f-display);font-weight:600;font-size:clamp(22px,2.5vw,32px);line-height:1.35;max-width:30ch}
+.read .w{color:var(--ink);opacity:.28;transition:opacity .35s, color .35s}
+.read .w.on{opacity:1}
+.read .w.hl.on{color:var(--blue-500)}
+@media (max-width:860px){.intro{padding-block:80px}.intro .wrap{grid-template-columns:1fr;gap:28px}.intro-head{position:static}}
+
+/* steps */
+.steps{padding-block:120px}
+.steps .wrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(40px,6vw,88px)}
+.steps-head{position:sticky;top:110px;align-self:start;display:flex;flex-direction:column;gap:22px;min-width:0;container-type:inline-size}
+.steps-head h2{font-size:clamp(34px,12cqi,76px);overflow-wrap:anywhere;font-weight:900;text-transform:uppercase;letter-spacing:.02em}
+.steps-head p{color:var(--on-navy-soft);max-width:34ch}
+.counter{font-family:var(--f-mono);font-size:14px;color:var(--on-navy-soft);display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums}
+.counter b{font-size:44px;font-weight:500;color:var(--on-navy);line-height:1}
+.track{position:relative;display:flex;flex-direction:column;gap:48px;padding-left:4px}
+.track::before,.track .fill{content:"";position:absolute;left:43px;top:44px;bottom:44px;width:2px;background:rgba(255,255,255,.14)}
+.track .fill{background:linear-gradient(var(--cyan),#fff);transform-origin:top;transform:scaleY(0)}
+.step{position:relative;display:grid;grid-template-columns:80px minmax(0,1fr);gap:24px;align-items:start;opacity:.42;transition:opacity .5s}
+.step.active,.step.done{opacity:1}
+.num{position:relative;width:80px;height:80px;display:grid;place-items:center;background:var(--navy-800);border-radius:50%}
+.num svg{position:absolute;inset:-4px;width:88px;height:88px;overflow:visible}
+.num path{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-dasharray:300;stroke-dashoffset:300;transition:stroke-dashoffset 1.1s cubic-bezier(.6,.1,.2,1)}
+.step.active .num path,.step.done .num path{stroke-dashoffset:0}
+.num span{font-family:"Segoe Print","Bradley Hand","Comic Sans MS",var(--f-display);font-style:italic;font-weight:700;font-size:34px;transform:rotate(-6deg)}
+.step h3{font-size:clamp(22px,2.3vw,28px);font-weight:700;text-transform:uppercase;letter-spacing:.02em;margin-top:8px}
+.step p{color:var(--on-navy-soft);margin-top:12px;max-width:52ch}
+.step .tip{margin-top:16px;display:inline-flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:13px;color:var(--cyan);border:1px dashed rgba(92,200,236,.45);padding:7px 12px;border-radius:6px}
+@media (max-width:860px){.steps{padding-block:80px}.steps .wrap{grid-template-columns:1fr;gap:40px}.steps-head{position:static}
+  .step{grid-template-columns:60px minmax(0,1fr);gap:18px}.num{width:60px;height:60px}.num svg{width:68px;height:68px}.num span{font-size:26px}.track::before,.track .fill{left:33px}}
+
+/* password lab */
+.lab{padding-block:120px}
+.lab .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+.lab-copy{min-width:0;container-type:inline-size}
+.lab h2{font-size:clamp(30px,9.5cqi,58px);font-weight:900;text-transform:uppercase}
+.lab .eyebrow{color:var(--blue-500);margin-bottom:16px;display:block}
+.lab-copy p{color:var(--ink-soft);margin-top:18px;max-width:46ch}
+.meter{background:#fff;border:1.5px solid var(--ink);border-radius:18px;padding:28px;box-shadow:10px 10px 0 var(--navy-800);display:flex;flex-direction:column;gap:18px}
+.meter label{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.field{display:flex;align-items:center;gap:8px;border:1.5px solid #c9d0e6;border-radius:12px;padding:4px 4px 4px 16px;transition:border-color .2s}
+.field:focus-within{border-color:var(--blue-500)}
+.field input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:var(--f-mono);font-size:18px;padding:12px 0;color:var(--ink)}
+.field button{border:0;background:var(--grid);color:var(--ink);font-family:var(--f-mono);font-size:12px;padding:10px 12px;border-radius:8px;cursor:pointer}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.bars i{height:8px;border-radius:4px;background:var(--grid);transition:background .3s}
+.verdict{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.verdict strong{font-family:var(--f-display);font-size:22px;font-weight:800}
+.verdict span{font-family:var(--f-mono);font-size:13px;color:var(--ink-soft)}
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14.5px}
+.checks li{display:flex;gap:8px;align-items:center;color:var(--ink-soft)}
+.checks li::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;border:1.5px solid #c1c8de;transition:all .2s}
+.checks li.ok{color:var(--ink)}
+.checks li.ok::before{background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center/100%;border-color:var(--ok)}
+.warn{font-size:14px;color:var(--bad);min-height:1.4em}
+.note{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--grid);padding-top:14px}
+@media (max-width:860px){.lab{padding-block:80px}.lab .wrap{grid-template-columns:1fr;gap:36px}.checks{grid-template-columns:1fr}.meter{padding:22px;box-shadow:6px 6px 0 var(--navy-800)}}
+
+/* habits */
+.habits{padding-block:120px}
+.habits header{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:48px}
+.habits h2{font-size:clamp(36px,4.6vw,62px);font-weight:900;text-transform:uppercase}
+.habits header p{color:var(--on-navy-soft);max-width:38ch}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;perspective:1200px}
+.card{--mx:50%;--my:50%;position:relative;min-width:0;padding:34px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);overflow:hidden;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.1,1),border-color .3s;display:flex;flex-direction:column;gap:14px}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx) var(--my),rgba(92,200,236,.22),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover{border-color:rgba(255,255,255,.35)}
+.card:hover::before{opacity:1}
+.card svg.ico{width:46px;height:46px;stroke:var(--cyan);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:clamp(22px,2.2vw,28px);font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.card p{color:var(--on-navy-soft);max-width:44ch}
+.demo{margin-top:auto;padding-top:10px;font-family:var(--f-mono);font-size:13px}
+.fake-link{position:relative;display:inline-block;color:var(--cyan);text-decoration:underline;text-underline-offset:3px;cursor:help}
+.fake-link .real{position:absolute;left:0;bottom:calc(100% + 10px);white-space:nowrap;background:#fff;color:var(--bad);padding:7px 10px;border-radius:6px;opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.fake-link:hover .real,.fake-link:focus .real{opacity:1;transform:none}
+.chat{display:flex;flex-direction:column;gap:6px;max-width:300px}
+.chat span{padding:8px 12px;border-radius:12px 12px 12px 3px;background:rgba(255,255,255,.1);align-self:flex-start}
+.chat span.me{border-radius:12px 12px 3px 12px;background:var(--blue-500);align-self:flex-end;position:relative}
+.chat span.me s{opacity:.6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.22)}
+.chips span.x{text-decoration:line-through;color:var(--on-navy-soft)}
+.backup{display:flex;align-items:center;gap:10px}
+.backup .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.backup .bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width 2.4s cubic-bezier(.3,.6,.2,1)}
+.card.seen .backup .bar i{width:100%}
+@media (max-width:760px){.habits{padding-block:80px}.cards{grid-template-columns:1fr}.card{padding:26px}}
+
+/* checklist */
+.list{padding-block:120px}
+.list .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:start}
+.list .wrap>div{min-width:0;container-type:inline-size}
+.list h2{font-size:clamp(30px,10cqi,58px);overflow-wrap:anywhere;font-weight:900;text-transform:uppercase}
+.list .eyebrow{color:var(--blue-500);display:block;margin-bottom:16px}
+.ring{margin-top:28px;display:flex;align-items:center;gap:18px}
+.ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:var(--grid)}
+.ring .fg{stroke:var(--blue-500);stroke-linecap:round;stroke-dasharray:264;stroke-dashoffset:264;transition:stroke-dashoffset .6s cubic-bezier(.3,.7,.2,1)}
+.ring p{color:var(--ink-soft);font-size:15px}
+.ring p b{display:block;font-family:var(--f-display);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums}
+.todo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.todo label{display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px;align-items:start;padding:18px 20px;background:#fff;border:1.5px solid #d6dcee;border-radius:14px;cursor:pointer;transition:border-color .2s,transform .2s}
+.todo label:hover{border-color:var(--blue-500);transform:translateX(4px)}
+.todo input{appearance:none;-webkit-appearance:none;width:26px;height:26px;margin:0;border:2px solid var(--ink);border-radius:8px;display:grid;place-items:center;cursor:pointer;transition:background .2s}
+.todo input:checked{background:var(--blue-500);border-color:var(--blue-500)}
+.todo input:checked::after{content:"";width:12px;height:7px;border:2.5px solid #fff;border-top:0;border-right:0;transform:translateY(-2px) rotate(-45deg)}
+.todo b{display:block;font-family:var(--f-display);font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.02em}
+.todo small{color:var(--ink-soft);font-size:14.5px}
+.todo input:checked + span b{text-decoration:line-through;text-decoration-color:var(--blue-500);text-decoration-thickness:2px}
+@media (max-width:860px){.list{padding-block:80px}.list .wrap{grid-template-columns:1fr;gap:32px}}
+
+/* footer */
+footer{padding-block:72px calc(48px + env(safe-area-inset-bottom,0px))}
+footer .wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+footer h2{font-size:clamp(30px,4.6vw,56px);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+footer svg{width:64px;height:64px}
+footer p{color:var(--on-navy-soft);max-width:48ch}
+footer .eyebrow{color:var(--on-navy-soft);margin-top:18px}
+
+/* reveal */
+[data-reveal]{transition:opacity .9s cubic-bezier(.2,.7,.1,1),transform .9s cubic-bezier(.2,.7,.1,1)}
+[data-reveal].pending{opacity:0;transform:translateY(32px)}
+
+/* cursor */
+.cursor,.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:100;border-radius:50%;mix-blend-mode:difference;opacity:0;transition:opacity .3s}
+.cursor{width:38px;height:38px;margin:-19px 0 0 -19px;border:1.5px solid #fff;transition:opacity .3s,width .25s,height .25s,margin .25s,background .25s}
+.cursor-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:#fff}
+.cursor.big{width:70px;height:70px;margin:-35px 0 0 -35px;background:#fff}
+body.has-cursor .cursor,body.has-cursor .cursor-dot{opacity:1}
+@media (hover:none),(pointer:coarse){.cursor,.cursor-dot{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-reveal].pending{opacity:1;transform:none}
+  .cursor,.cursor-dot{display:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor"></div><div class="cursor-dot" id="cursorDot"></div>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#topo">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="8" y="8" width="16" height="16" rx="3"/><path d="M13 13h6v6h-4"/><path d="M12 8V4M16 8V4M20 8V4M12 28v-4M16 28v-4M20 28v-4M8 12H4M8 16H4M8 20H4M28 12h-4M28 16h-4M28 20h-4"/></svg>
+      Engenharia de Software
+    </a>
+    <ul>
+      <li><a href="#seguranca">Segurança digital</a></li>
+      <li><a href="#proteger">Como se proteger</a></li>
+      <li><a href="#senha">Teste de senha</a></li>
+      <li><a href="#checklist">Checklist</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero navy" id="topo">
+  <canvas class="hex" id="hex"></canvas>
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Engenharia de Software · Segurança digital</span>
+      <h1><span class="line"><span>Seus dados</span></span><span class="line"><span>também precisam</span></span><span class="line"><span class="accent">de proteção</span></span></h1>
+      <p class="lead">Como proteger suas <strong>contas, fotos, mensagens e informações pessoais</strong> com hábitos simples.</p>
+      <div class="ctas">
+        <a class="btn primary magnetic" href="#proteger">Ver os 4 passos
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3.5 8.5L8 13l4.5-4.5"/></svg></a>
+        <a class="btn ghost magnetic" href="#senha">Testar uma senha</a>
+      </div>
+      <div class="scroll-cue"><i></i>Role para continuar</div>
+    </div>
+    <div class="globe-wrap" id="globeWrap">
+      <canvas id="globe" aria-label="Globo em arame girando, com conexões de dados entre pontos" role="img"></canvas>
+      <div class="globe-tag" style="top:12%;left:0"><b>●</b> conexão protegida</div>
+      <div class="globe-tag" style="bottom:14%;right:0">2FA <b>ativo</b></div>
+    </div>
+  </div>
+</header>
+
+<section class="intro paper" id="seguranca">
+  <div class="wrap">
+    <div class="intro-head"><h2 data-reveal><small>// por que isso importa</small>Segurança digital</h2></div>
+    <div class="read" id="read">
+      <p>A internet faz parte da nossa rotina. Usamos contas, aplicativos e dispositivos para estudar, trabalhar, conversar e guardar *informações* *pessoais.*</p>
+      <p>Por isso, alguns *cuidados* *simples* podem evitar grandes problemas.</p>
+      <p>Proteja suas informações, *pense* *antes* *de* *clicar* e não compartilhe seus dados com desconhecidos.</p>
+    </div>
+  </div>
+</section>
+
+<section class="steps navy" id="proteger">
+  <div class="wrap">
+    <div class="steps-head">
+      <span class="eyebrow" style="color:var(--cyan)">Passo a passo</span>
+      <h2>Como se proteger?</h2>
+      <p>Quatro hábitos que fecham as portas mais usadas em golpes e invasões de conta.</p>
+      <div class="counter"><b id="stepNow">01</b>/ 04</div>
+    </div>
+    <div class="track" id="track">
+      <div class="fill" id="fill"></div>
+      <article class="step">
+        <div class="num"><svg viewBox="0 0 88 88"><path d="M70 22C58 8 22 8 10 30C2 48 14 76 44 80C70 82 86 60 80 38C77 28 66 18 52 14"/></svg><span>1</span></div>
+        <div><h3>Proteja suas senhas</h3>
+          <p>Use senhas fortes e diferentes para cada conta. Evite nomes, datas de nascimento e informações fáceis de descobrir.</p>
+          <span class="tip">↳ Um gerenciador de senhas lembra todas por você</span></div>
+      </article>
+      <article class="step">
+        <div class="num"><svg viewBox="0 0 88 88"><path d="M68 18C52 6 20 10 9 34C2 52 18 78 46 80C72 80 86 58 80 36C76 24 64 16 50 13"/></svg><span>2</span></div>
+        <div><h3>Ative a verificação em duas etapas</h3>
+          <p>Além da senha, a conta pede um código enviado ao celular ou gerado por um aplicativo. Mesmo que alguém descubra sua senha, não consegue entrar sem esse segundo passo.</p>
+          <span class="tip">↳ Procure por "verificação em duas etapas" nas configurações</span></div>
+      </article>
+      <article class="step">
+        <div class="num"><svg viewBox="0 0 88 88"><path d="M72 24C60 6 22 8 10 32C2 50 16 78 44 80C70 82 86 60 81 38C78 26 66 16 50 13"/></svg><span>3</span></div>
+        <div><h3>Desconfie de links</h3>
+          <p>Mensagens com urgência, prêmios ou cobranças inesperadas costumam levar a páginas falsas. Confira o endereço antes de clicar e, na dúvida, digite você mesmo o endereço do site.</p>
+          <span class="tip">↳ Bancos não pedem senha por mensagem</span></div>
+      </article>
+      <article class="step">
+        <div class="num"><svg viewBox="0 0 88 88"><path d="M69 20C55 7 21 9 10 32C2 50 17 78 45 80C71 81 86 59 80 37C77 26 65 16 51 13"/></svg><span>4</span></div>
+        <div><h3>Mantenha tudo atualizado</h3>
+          <p>Atualizações do sistema e dos aplicativos corrigem falhas de segurança já conhecidas. Ative as atualizações automáticas no celular e no computador.</p>
+          <span class="tip">↳ Adiar a atualização deixa a falha aberta</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="lab paper" id="senha">
+  <div class="wrap">
+    <div class="lab-copy" data-reveal>
+      <span class="eyebrow">Laboratório · passo 1 na prática</span>
+      <h2>Quanto tempo levaria para adivinhar?</h2>
+      <p>Programas de ataque testam bilhões de combinações por segundo e começam pelas mais óbvias: nomes, datas, sequências e palavras comuns. Digite um exemplo e veja como pequenas mudanças fazem diferença.</p>
+      <p>Dica: uma frase com quatro ou mais palavras aleatórias costuma ser forte e fácil de lembrar.</p>
+    </div>
+    <div class="meter" data-reveal>
+      <label for="pw">Digite uma senha de exemplo</label>
+      <div class="field">
+        <input id="pw" type="password" autocomplete="off" spellcheck="false" placeholder="ex.: maria2005" value="maria2005">
+        <button type="button" id="toggle" aria-pressed="false">mostrar</button>
+      </div>
+      <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="verdict"><strong id="label">Fraca</strong><span id="time">quebrada em segundos</span></div>
+      <ul class="checks">
+        <li id="c-len">12 caracteres ou mais</li>
+        <li id="c-mix">Maiúsculas e minúsculas</li>
+        <li id="c-num">Números</li>
+        <li id="c-sym">Símbolos (! @ # …)</li>
+      </ul>
+      <p class="warn" id="warn"></p>
+      <p class="note">Não use sua senha real. O teste roda apenas no seu navegador e nada é enviado, mas digitar senhas verdadeiras em sites desconhecidos é justamente o hábito a evitar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="habits navy" id="habitos">
+  <div class="wrap">
+    <header data-reveal>
+      <div><span class="eyebrow" style="color:var(--cyan)">No dia a dia</span><h2>Cuidados que<br>valem sempre</h2></div>
+      <p>Passe o cursor pelos cartões: cada um traz um exemplo do golpe ou do cuidado na prática.</p>
+    </header>
+    <div class="cards">
+      <article class="card" data-reveal>
+        <svg class="ico" viewBox="0 0 48 48"><path d="M20 28l8-8"/><path d="M22 14l4-4a8 8 0 0 1 12 12l-4 4"/><path d="M26 34l-4 4a8 8 0 0 1-12-12l4-4"/></svg>
+        <h3>Pense antes de clicar</h3>
+        <p>Links inesperados podem esconder golpes ou páginas falsas.</p>
+        <div class="demo">O texto diz <span class="fake-link" tabindex="0">bancoseguro.com.br<span class="real">→ http://bnco-segur0.xyz/login</span></span>, mas o destino é outro.</div>
+      </article>
+      <article class="card" data-reveal>
+        <svg class="ico" viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="19" rx="3"/><path d="M16 21v-5a8 8 0 0 1 16 0v5"/><circle cx="24" cy="30" r="2.5"/></svg>
+        <h3>Não compartilhe senhas</h3>
+        <p>Sua senha é pessoal. Nunca envie por mensagem ou e-mail.</p>
+        <div class="demo chat"><span>Oi! Sou do suporte, me passa sua senha?</span><span class="me"><s>minhaSenha123</s> Não. Vou ligar no número oficial.</span></div>
+      </article>
+      <article class="card" data-reveal>
+        <svg class="ico" viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="28" rx="3"/><circle cx="18" cy="21" r="4"/><path d="M12 32c1.5-4 4-5.5 6-5.5s4.5 1.5 6 5.5M28 19h8M28 25h6"/></svg>
+        <h3>Cuidado com seus dados</h3>
+        <p>Evite informar CPF, endereço, códigos ou dados bancários sem necessidade em sites.</p>
+        <div class="demo chips"><span class="x">CPF</span><span class="x">Endereço</span><span class="x">Código SMS</span><span class="x">Dados do cartão</span></div>
+      </article>
+      <article class="card" data-reveal>
+        <svg class="ico" viewBox="0 0 48 48"><path d="M14 34h-1a8 8 0 0 1-1-15.9A11 11 0 0 1 33 15a9 9 0 0 1 2 18h-1"/><path d="M24 24v14M19 33l5 5 5-5"/></svg>
+        <h3>Faça backup</h3>
+        <p>Mantenha cópias de fotos, documentos e arquivos importantes.</p>
+        <div class="demo backup"><span>fotos/</span><span class="bar"><i></i></span><span>nuvem ✓</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="list paper" id="checklist">
+  <div class="wrap">
+    <div data-reveal>
+      <span class="eyebrow">Hora de agir</span>
+      <h2>Seu checklist de segurança</h2>
+      <div class="ring">
+        <svg viewBox="0 0 96 96"><circle class="bg" cx="48" cy="48" r="42"/><circle class="fg" id="ringFg" cx="48" cy="48" r="42"/></svg>
+        <p><b id="doneCount">0 de 6</b>cuidados em dia</p>
+      </div>
+    </div>
+    <ul class="todo" data-reveal>
+      <li><label><input type="checkbox" id="t1"><span><b>Senhas diferentes</b><small>Cada conta importante tem a sua senha.</small></span></label></li>
+      <li><label><input type="checkbox" id="t2"><span><b>Verificação em duas etapas</b><small>Ativada no e-mail, no WhatsApp e no banco.</small></span></label></li>
+      <li><label><input type="checkbox" id="t3"><span><b>Links conferidos</b><small>Abro sites digitando o endereço quando a mensagem é suspeita.</small></span></label></li>
+      <li><label><input type="checkbox" id="t4"><span><b>Atualizações automáticas</b><small>Ligadas no celular e no computador.</small></span></label></li>
+      <li><label><input type="checkbox" id="t5"><span><b>Dados guardados</b><small>Só informo CPF e cartão quando é realmente necessário.</small></span></label></li>
+      <li><label><input type="checkbox" id="t6"><span><b>Backup recente</b><small>Fotos e documentos têm uma cópia em outro lugar.</small></span></label></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="navy">
+  <div class="wrap">
+    <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><rect x="8" y="8" width="16" height="16" rx="3"/><path d="M13 13h6v6h-4"/><path d="M12 8V4M16 8V4M20 8V4M12 28v-4M16 28v-4M20 28v-4M8 12H4M8 16H4M8 20H4M28 12h-4M28 16h-4M28 20h-4"/></svg>
+    <h2>Engenharia de Software</h2>
+    <p>Proteja suas informações, pense antes de clicar e não compartilhe seus dados com desconhecidos.</p>
+    <a class="btn ghost magnetic" href="#topo">Voltar ao topo ↑</a>
+    <span class="eyebrow">Campanha de segurança digital</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const mouse = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0 };
+
+  /* ---------- cursor ---------- */
+  const cur = document.getElementById('cursor'), dot = document.getElementById('cursorDot');
+  let cx = mouse.x, cy = mouse.y;
+  addEventListener('pointermove', e => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    mouse.nx = e.clientX / innerWidth - .5; mouse.ny = e.clientY / innerHeight - .5;
+    if (fine && !reduce) { document.body.classList.add('has-cursor'); dot.style.transform = `translate(${e.clientX}px,${e.clientY}px)`; }
+  });
+  document.addEventListener('pointerleave', () => document.body.classList.remove('has-cursor'));
+  document.querySelectorAll('a, button, label, .fake-link, input').forEach(el => {
+    el.addEventListener('pointerenter', () => cur.classList.add('big'));
+    el.addEventListener('pointerleave', () => cur.classList.remove('big'));
+  });
+
+  /* ---------- magnetic buttons ---------- */
+  if (fine && !reduce) document.querySelectorAll('.magnetic').forEach(b => {
+    b.addEventListener('pointermove', e => {
+      const r = b.getBoundingClientRect();
+      b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .25}px,${(e.clientY - r.top - r.height / 2) * .35}px)`;
+    });
+    b.addEventListener('pointerleave', () => { b.style.transition = 'transform .5s cubic-bezier(.2,.7,.1,1)'; b.style.transform = ''; setTimeout(() => b.style.transition = '', 500); });
+  });
+
+  /* ---------- card tilt + spotlight ---------- */
+  document.querySelectorAll('.card').forEach(c => {
+    c.addEventListener('pointermove', e => {
+      const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+      if (fine && !reduce) c.style.transform = `rotateX(${(.5 - y / r.height) * 7}deg) rotateY(${(x / r.width - .5) * 9}deg) translateZ(0)`;
+    });
+    c.addEventListener('pointerleave', () => c.style.transform = '');
+  });
+
+  /* ---------- reading highlight: split words ---------- */
+  const read = document.getElementById('read');
+  read.querySelectorAll('p').forEach(p => {
+    p.innerHTML = p.textContent.split(/\s+/).filter(Boolean).map(w => {
+      const hl = w.startsWith('*'); w = w.replace(/\*/g, '');
+      return `<span class="w${hl ? ' hl' : ''}">${w}</span>`;
+    }).join(' ');
+  });
+  const words = [...read.querySelectorAll('.w')];
+  if (reduce) words.forEach(w => w.classList.add('on'));
+
+  /* ---------- reveal on scroll (only for things below the first screen) ---------- */
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.remove('pending'); e.target.classList.add('seen'); io.unobserve(e.target); }
+    }), { threshold: .15 });
+    revealEls.forEach((el, i) => {
+      if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('pending'); el.style.transitionDelay = (el.classList.contains('card') ? (i % 2) * 120 : 0) + 'ms'; }
+      io.observe(el);
+    });
+  } else revealEls.forEach(el => el.classList.add('seen'));
+
+  /* ---------- scroll-driven bits ---------- */
+  const progress = document.getElementById('progress'), nav = document.getElementById('nav');
+  const track = document.getElementById('track'), fill = document.getElementById('fill');
+  const steps = [...track.querySelectorAll('.step')], stepNow = document.getElementById('stepNow');
+  function onScroll() {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`;
+    nav.classList.toggle('solid', scrollY > 40);
+
+    if (!reduce) {
+      const r = read.getBoundingClientRect();
+      const p = clamp((innerHeight * .8 - r.top) / (r.height + innerHeight * .1), 0, 1);
+      const n = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle('on', i < n));
+    }
+
+    const tr = track.getBoundingClientRect(), mid = innerHeight * .55;
+    fill.style.transform = `scaleY(${clamp((mid - tr.top - 44) / (tr.height - 88), 0, 1)})`;
+    let active = 0;
+    steps.forEach((s, i) => { if (s.getBoundingClientRect().top < mid) active = i; });
+    steps.forEach((s, i) => { s.classList.toggle('active', i === active); s.classList.toggle('done', i < active); });
+    stepNow.textContent = String(active + 1).padStart(2, '0');
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---------- hex field (hero background) ---------- */
+  const hero = document.getElementById('topo');
+  const hex = document.getElementById('hex'), hx = hex.getContext('2d');
+  let hw = 0, hh = 0, dpr = 1;
+  function sizeHex() { dpr = Math.min(devicePixelRatio || 1, 2); hw = hex.clientWidth; hh = hex.clientHeight; hex.width = hw * dpr; hex.height = hh * dpr; hx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  const S = 34, SQ3 = Math.sqrt(3);
+  const hm = { x: -999, y: -999 }; // smoothed mouse in hero space
+  function drawHex(t) {
+    hx.clearRect(0, 0, hw, hh);
+    const rb = hero.getBoundingClientRect();
+    const tx = mouse.x - rb.left, ty = mouse.y - rb.top;
+    hm.x += (tx - hm.x) * .12; hm.y += (ty - hm.y) * .12;
+    const off = scrollY * .25;
+    for (let col = -1; col * S * 1.5 < hw + S; col++) {
+      for (let row = -1; row * S * SQ3 < hh + S * 2; row++) {
+        const x = col * S * 1.5, y = row * S * SQ3 + (col & 1 ? S * SQ3 / 2 : 0) - (off % (S * SQ3));
+        const d = Math.hypot(x - hm.x, y - hm.y);
+        const wave = reduce ? 0 : (Math.sin(t * .0012 + col * .5 + row * .35) + 1) * .02;
+        const near = Math.max(0, 1 - d / 230);
+        // hexes fade in toward the bottom corners, echoing the flyer
+        const corner = Math.max(0, (y / hh) - .45) * Math.abs(x / hw - .5) * 1.6;
+        const a = .035 + wave + corner * .35 + near * .65;
+        if (a < .04) continue;
+        hx.beginPath();
+        for (let k = 0; k < 6; k++) { const an = Math.PI / 3 * k, px = x + S * .92 * Math.cos(an), py = y + S * .92 * Math.sin(an); k ? hx.lineTo(px, py) : hx.moveTo(px, py); }
+        hx.closePath();
+        hx.strokeStyle = near > .4 ? `rgba(92,200,236,${a})` : `rgba(110,140,255,${a})`;
+        hx.lineWidth = 1; hx.stroke();
+        if (near > .25) for (let k = 0; k < 6; k++) {
+          const an = Math.PI / 3 * k; hx.fillStyle = `rgba(160,220,255,${near})`;
+          hx.beginPath(); hx.arc(x + S * .92 * Math.cos(an), y + S * .92 * Math.sin(an), 1.8, 0, 7); hx.fill();
+        }
+      }
+    }
+  }
+
+  /* ---------- wireframe globe ---------- */
+  const gc = document.getElementById('globe'), gx = gc.getContext('2d');
+  let gw = 0;
+  function sizeGlobe() { gw = gc.clientWidth; gc.width = gw * dpr; gc.height = gw * dpr; gx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  const D = Math.PI / 180;
+  const nodes = [[-23, -46], [40, -74], [51, 0], [35, 139], [-33, 151], [19, 72], [-1, 36], [55, 37], [-34, -58], [1, 103]].map(([a, b]) => [a * D, b * D]);
+  const links = [[0, 1], [0, 2], [2, 7], [7, 3], [3, 4], [5, 9], [6, 2], [0, 8], [1, 3], [9, 4]];
+  const toV = (lat, lon) => [Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon)];
+  let yawS = 0, pitchS = .35;
+  function drawGlobe(t) {
+    const W = gw, R = W * .4, c = W / 2;
+    gx.clearRect(0, 0, W, W);
+    const yaw = (reduce ? 0 : t * .00012) + yawS, pitch = pitchS;
+    yawS += ((mouse.nx * 1.4) - yawS) * .05;
+    pitchS += ((.35 + mouse.ny * .6 + scrollY * .0008) - pitchS) * .05;
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const proj = v => { const x = v[0] * cy - v[2] * sy, z1 = v[0] * sy + v[2] * cy, y = v[1] * cp - z1 * sp, z = v[1] * sp + z1 * cp; return [c + x * R, c - y * R, z]; };
+    // halo
+    const g = gx.createRadialGradient(c, c, R * .7, c, c, R * 1.25);
+    g.addColorStop(0, 'rgba(61,91,214,0)'); g.addColorStop(1, 'rgba(61,91,214,.0)');
+    g.addColorStop(.5, 'rgba(61,91,214,.18)');
+    gx.fillStyle = g; gx.fillRect(0, 0, W, W);
+    const seg = (pts) => {
+      for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1], b = pts[i], z = (a[2] + b[2]) / 2;
+        gx.strokeStyle = z > 0 ? `rgba(255,255,255,${.35 + z * .55})` : 'rgba(150,170,255,.12)';
+        gx.lineWidth = z > 0 ? 1.1 : .8;
+        gx.beginPath(); gx.moveTo(a[0], a[1]); gx.lineTo(b[0], b[1]); gx.stroke();
+      }
+    };
+    for (let lon = 0; lon < 180; lon += 20) { const pts = []; for (let lat = -90; lat <= 270; lat += 8) pts.push(proj(toV(lat * D, lon * D))); seg(pts); }
+    for (let lat = -60; lat <= 60; lat += 30) { const pts = []; for (let lon = 0; lon <= 360; lon += 8) pts.push(proj(toV(lat * D, lon * D))); seg(pts); }
+    // data arcs
+    links.forEach(([i, j], k) => {
+      const A = toV(...nodes[i]), B = toV(...nodes[j]);
+      const dot3 = clamp(A[0] * B[0] + A[1] * B[1] + A[2] * B[2], -1, 1), om = Math.acos(dot3), so = Math.sin(om) || 1;
+      const at = s => { const f1 = Math.sin((1 - s) * om) / so, f2 = Math.sin(s * om) / so, h = 1 + .22 * Math.sin(Math.PI * s) * om;
+        return proj([(A[0] * f1 + B[0] * f2) * h, (A[1] * f1 + B[1] * f2) * h, (A[2] * f1 + B[2] * f2) * h]); };
+      gx.beginPath(); let vis = 0;
+      for (let s = 0; s <= 1.001; s += .05) { const p = at(s); vis += p[2]; s ? gx.lineTo(p[0], p[1]) : gx.moveTo(p[0], p[1]); }
+      gx.strokeStyle = vis > 0 ? 'rgba(92,200,236,.7)' : 'rgba(92,200,236,.15)'; gx.lineWidth = 1.3; gx.stroke();
+      if (!reduce) { const s = ((t * .00025 + k * .37) % 1), p = at(s);
+        if (p[2] > -.2) { gx.fillStyle = '#fff'; gx.shadowColor = '#5cc8ec'; gx.shadowBlur = 12; gx.beginPath(); gx.arc(p[0], p[1], 2.6, 0, 7); gx.fill(); gx.shadowBlur = 0; } }
+    });
+    nodes.forEach(n => { const p = proj(toV(...n)); if (p[2] < 0) return;
+      gx.fillStyle = 'rgba(92,200,236,.25)'; gx.beginPath(); gx.arc(p[0], p[1], 7, 0, 7); gx.fill();
+      gx.fillStyle = '#5cc8ec'; gx.beginPath(); gx.arc(p[0], p[1], 3, 0, 7); gx.fill(); });
+  }
+
+  let heroVisible = true;
+  new IntersectionObserver(es => heroVisible = es[0].isIntersecting).observe(hero);
+  function frame(t) {
+    if (heroVisible) { drawHex(t); drawGlobe(t); }
+    if (fine && !reduce) { cx += (mouse.x - cx) * .18; cy += (mouse.y - cy) * .18; cur.style.transform = `translate(${cx}px,${cy}px)`; }
+    requestAnimationFrame(frame);
+  }
+  function sizeAll() { sizeHex(); sizeGlobe(); }
+  addEventListener('resize', sizeAll); sizeAll();
+  if (reduce) { drawHex(0); drawGlobe(0); addEventListener('pointermove', () => { drawHex(0); drawGlobe(0); }); }
+  else requestAnimationFrame(frame);
+
+  /* ---------- password meter ---------- */
+  const pw = document.getElementById('pw'), bars = [...document.querySelectorAll('.bars i')];
+  const label = document.getElementById('label'), time = document.getElementById('time'), warn = document.getElementById('warn');
+  const common = ['senha', 'password', '123456', 'qwerty', 'abc123', 'admin', 'brasil', 'flamengo', 'corinthians', 'palmeiras', 'amor', 'deus', 'jesus', 'teamo', 'iloveyou', '102030', '111111', '000000', 'mudar'];
+  const names = ['maria', 'joao', 'jose', 'ana', 'pedro', 'lucas', 'gabriel', 'julia', 'carlos', 'paulo', 'rafael', 'bruno', 'mateus', 'beatriz', 'fernanda'];
+  function fmt(sec) {
+    if (sec < 1) return 'quebrada na hora';
+    const u = [['segundos', 60], ['minutos', 60], ['horas', 24], ['dias', 365], ['anos', 100], ['séculos', 1e9]];
+    let v = sec;
+    for (const [n, k] of u) { if (v < k) return `cerca de ${Math.max(1, Math.round(v))} ${n}`; v /= k; }
+    return 'bilhões de séculos';
+  }
+  function rate() {
+    const s = pw.value, low = s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const has = { len: s.length >= 12, mix: /[a-z]/.test(s) && /[A-Z]/.test(s), num: /\d/.test(s), sym: /[^A-Za-z0-9]/.test(s) };
+    Object.entries(has).forEach(([k, v]) => document.getElementById('c-' + k).classList.toggle('ok', v));
+    let pool = (/[a-z]/.test(s) ? 26 : 0) + (/[A-Z]/.test(s) ? 26 : 0) + (/\d/.test(s) ? 10 : 0) + (/[^A-Za-z0-9]/.test(s) ? 33 : 0);
+    let bits = s.length * Math.log2(pool || 1);
+    const notes = [];
+    if (common.some(w => low.includes(w))) { bits = Math.min(bits, 14); notes.push('contém uma senha muito comum'); }
+    if (names.some(w => low.includes(w))) { bits -= 18; notes.push('contém um nome próprio'); }
+    if (/(19[4-9]\d|20[0-3]\d)/.test(s)) { bits -= 10; notes.push('parece ter um ano ou data'); }
+    if (/(.)\1{2,}/.test(s)) { bits -= 8; notes.push('repete o mesmo caractere'); }
+    if (/(0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf)/i.test(s)) { bits -= 10; notes.push('usa uma sequência do teclado'); }
+    bits = Math.max(0, bits);
+    const secs = Math.pow(2, bits) / 2 / 1e10;
+    const lvl = !s ? 0 : bits < 36 ? 1 : bits < 56 ? 2 : bits < 76 ? 3 : 4;
+    const colors = ['var(--grid)', 'var(--bad)', 'var(--warn)', '#8ac43f', 'var(--ok)'];
+    bars.forEach((b, i) => b.style.background = i < lvl ? colors[lvl] : 'var(--grid)');
+    label.textContent = ['Digite algo', 'Fraca', 'Razoável', 'Boa', 'Forte'][lvl];
+    label.style.color = lvl ? colors[lvl] : 'var(--ink-soft)';
+    time.textContent = s ? fmt(secs) + (secs >= 1 ? ' para adivinhar' : '') : '';
+    warn.textContent = notes.length ? 'Atenção: ' + notes.join(', ') + '.' : '';
+  }
+  pw.addEventListener('input', rate); rate();
+  const tg = document.getElementById('toggle');
+  tg.addEventListener('click', () => { const show = pw.type === 'password'; pw.type = show ? 'text' : 'password'; tg.textContent = show ? 'ocultar' : 'mostrar'; tg.setAttribute('aria-pressed', show); });
+
+  /* ---------- checklist ---------- */
+  const boxes = [...document.querySelectorAll('.todo input')], ring = document.getElementById('ringFg'), cnt = document.getElementById('doneCount');
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('seg-checklist') || '{}'); } catch (e) {}
+  boxes.forEach(b => b.checked = !!saved[b.id]);
+  function upd() {
+    const n = boxes.filter(b => b.checked).length;
+    ring.style.strokeDashoffset = 264 * (1 - n / boxes.length);
+    cnt.textContent = `${n} de ${boxes.length}`;
+    try { localStorage.setItem('seg-checklist', JSON.stringify(Object.fromEntries(boxes.map(b => [b.id, b.checked])))); } catch (e) {}
+  }
+  boxes.forEach(b => b.addEventListener('change', upd)); upd();
+})();
+</script>
+</body>
+</html>
